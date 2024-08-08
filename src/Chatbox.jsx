@@ -29,13 +29,13 @@ export function Chatbox(props) {
     'Let,s begin the rap battle you start first then i will beat the hell out of you'];
 
   return (
-    <Drawer direction="right" className="fixed w-1/5 h-full">
+    <Drawer direction="right" className="fixed w-full md:w-[60%] h-full">
       <DrawerTrigger asChild>
         <Button disabled={!props.selectedCharacter1 || !props.selectedCharacter2}
           className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 ..."
         >Start Battle</Button>
       </DrawerTrigger>
-      <DrawerContent className="h-screen flex flex-col left-auto w-[60%] p-0">
+      <DrawerContent className="h-screen flex flex-col left-auto w-full md:w-[60%] p-0">
         <div className="flex flex-col h-full">
           <DrawerHeader className="text-center">
             <DrawerTitle className="text-white text-center">Chatbox</DrawerTitle>
