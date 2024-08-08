@@ -29,7 +29,7 @@ export function Chatbox(props) {
     'Let,s begin the rap battle you start first then i will beat the hell out of you'];
 
   return (
-    <Drawer direction="right">
+    <Drawer direction="right" className="w-1/3">
       <DrawerTrigger asChild>
         <Button disabled={!props.selectedCharacter1 || !props.selectedCharacter2}
           className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 ..."
@@ -42,7 +42,7 @@ export function Chatbox(props) {
             <DrawerDescription className="text-gray-400 text-center">Rap battle between {props.selectedCharacter1} and {props.selectedCharacter2}</DrawerDescription>
           </DrawerHeader>
 
-          <div className="overflow-y-scroll scroll-smooth">
+          <div className="h-full overflow-y-auto scroll-smooth">
             <Data items={items}> </Data>
 
           </div>

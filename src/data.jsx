@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Textarea } from "./components/ui/textarea";
 import Texttospeech from './Text_to_speech';
 import { generateAnswer } from "./Generate_response";
@@ -8,6 +8,7 @@ import { Howl } from "howler";
 import { motion } from "framer-motion";
 import { Button } from "./components/ui/button";
 import { EditIcon, PlayIcon, StopCircleIcon } from "lucide-react";
+import { Loader } from "lucide-react";
 
 
 export function Data(param) {
@@ -15,7 +16,15 @@ export function Data(param) {
     const [items, setItems] = useState(param.items);
     const [editingIndex, setEditingIndex] = useState(null);
     const [inputValue, setInputValue] = useState(items[items.length - 1]);
+    const [loading, setLoading] = useState(false);
+    const scrollRef = useRef(null);
 
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [items]);
 
 
     const toggleEdit = (index) => {
@@ -33,17 +42,24 @@ export function Data(param) {
     };
 
     const fetchAndUpdateItems = async () => {
-
         for (let i = 0; i < 5; i++) {
+            setLoading(true);
             console.log(i);
-            const newResponse = await generateAnswer(inputValue);
-            if (newResponse) {
-                setInputValue(newResponse);
-                setItems(prevItems => [
-                    ...prevItems,
-                    newResponse,
-                ]);
+            try {
+                const newResponse = await generateAnswer(inputValue);
+                if (newResponse) {
+                    setInputValue(newResponse);
+                    setItems(prevItems => [
+                        ...prevItems,
+                        newResponse,
+                    ]);
 
+                }
+            }
+            catch (error) {
+                console.error('Error generating answer:', error);
+            } finally {
+                setLoading(false);
             }
         };
     }
@@ -74,8 +90,9 @@ export function Data(param) {
     }, [audioUrl]);
 
     return (
-        <div>
+        <div className="h-full overflow-y-auto scroll-smooth" ref={scrollRef}>
             {
+
                 items.map((item, index) => (
                     <div key={index}
                         className={`flex flex-col overflow-hidden justify-spacebetween
@@ -146,6 +163,11 @@ export function Data(param) {
                     </div>
                 ))
             }
+            {loading && (
+                <div className="flex justify-center items-center mt-4">
+                    <Loader />
+                </div>
+            )}
             <div className="fixed bottom-4 right-4">
                 <Button onClick={() => fetchAndUpdateItems()}>fetch more....</Button>
             </div>
